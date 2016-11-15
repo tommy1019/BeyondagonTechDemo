@@ -1,7 +1,11 @@
 #include <iostream>
 
-#include <SDL2/SDL.h>
+#define GL3_PROTOTYPES 1
 #include <GL/glew.h>
+
+#include <SDL2/SDL.h>
+
+#include "SurfaceBall.h"
 
 #define WIDTH 800
 #define HEIGHT 600
@@ -30,6 +34,12 @@ int main()
         return 1;
     }
 
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+
+    SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 0);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+
     mainWindow = SDL_CreateWindow(
             WINDOW_TITLE,
             SDL_WINDOWPOS_CENTERED,
@@ -52,7 +62,15 @@ int main()
 
     glewInit();
 
+    std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
+
+    int softwareRendering = -1;
+    SDL_GL_GetAttribute(SDL_GL_ACCELERATED_VISUAL, &softwareRendering);
+    std::cout << "Gl Accelerated Visual: " << softwareRendering << std::endl;
+
 	bool running = true;
+
+    SurfaceBall b("res/teapot.sball");
 
     while (running)
     {
@@ -71,7 +89,7 @@ int main()
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        
+                
 
         SDL_GL_SwapWindow(mainWindow);
     }
