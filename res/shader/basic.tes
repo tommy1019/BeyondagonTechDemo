@@ -1,0 +1,14 @@
+#version 410
+
+layout(quads) in;
+
+in vec3 tcPosition[];
+out vec3 tePosition;
+out vec3 tePatchDistance;
+
+void main()
+{
+    tePatchDistance = gl_TessCoord;
+    tePosition = tcPosition[0] + gl_TessCoord;
+    gl_Position = vec4(tePosition, 1);
+}

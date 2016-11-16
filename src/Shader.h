@@ -7,10 +7,10 @@
 
 class Shader
 {
-    GLuint shader;
-
     public:
-        Shader(string name);
+        GLuint program;
+
+        Shader(std::string name);
 };
 
 #endif
