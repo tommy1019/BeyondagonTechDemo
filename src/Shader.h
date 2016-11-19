@@ -9,6 +9,7 @@ class Shader
 {
     public:
         GLuint program;
+        GLuint positionPos;
 
         Shader(std::string name);
 };

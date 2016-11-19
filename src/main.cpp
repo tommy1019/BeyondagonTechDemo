@@ -75,6 +75,9 @@ int main()
     Shader shader("res/shader/basic");
     SurfaceBall b("res/teapot.sball");
 
+    glEnable(GL_DEPTH_TEST);
+    glClearColor(0.7f, 0.6f, 0.5f, 1.0f);
+    
     glPatchParameteri(GL_PATCH_VERTICES, 16);
 
     glPointSize(64);
@@ -103,7 +106,7 @@ int main()
 
         time++;
 
-        t[2] = (float)sin(time / 100) * 5;
+        t[2] = (float)sin(time / 30) * 5;
         std::cout << t[2] << " \n";
 
         glUseProgram(shader.program);
@@ -112,9 +115,11 @@ int main()
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(shader.positionPos);
         glBindBuffer(GL_ARRAY_BUFFER, b.vertices);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), NULL);
+        glVertexAttribPointer(shader.positionPos, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), NULL);
+
+        std::cout << b.numPatches <<  " patches rendered" << shader.positionPos  << "\n";
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, b.indices);
         glDrawElements(GL_POINTS, b.numPatches * 16, GL_UNSIGNED_INT, NULL);

@@ -31,6 +31,8 @@ Shader::Shader(std::string name)
         std::cout << "Error: Linking shader\n" << infoLog << std::endl;
     }
 
+    glBindAttribLocation(program, positionPos, "position");
+
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
     glDeleteShader(tessellationControlShader);
