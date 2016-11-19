@@ -28,7 +28,7 @@ OFLAG=/Fo
 endif
 endif
 
-ichor: $(OBJECTS)
+beyondagon: $(OBJECTS)
 	$(LL) $(OUTPUT) $(OBJECTS) $(LFLAGS)
 
 $(OBJECTS) : build/%.o: src/%.cpp
