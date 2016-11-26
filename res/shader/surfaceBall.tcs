@@ -1,0 +1,21 @@
+#version 410
+
+layout(vertices = 16) out;
+in vec3 vPosition[];
+out vec3 tcPosition[];
+
+uniform int resolution;
+
+void main()
+{
+    tcPosition[gl_InvocationID] = vPosition[gl_InvocationID];
+    if (gl_InvocationID == 0)
+    {
+        gl_TessLevelInner[0] = resolution;
+        gl_TessLevelInner[1] = resolution;
+        gl_TessLevelOuter[0] = resolution;
+        gl_TessLevelOuter[1] = resolution;
+        gl_TessLevelOuter[2] = resolution;
+        gl_TessLevelOuter[3] = resolution;
+    }
+}

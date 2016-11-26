@@ -1,11 +1,10 @@
 #version 330
 
 in vec3 position;
-out vec3 vPosition;
 
-uniform vec3 t;
+uniform mat4 projection;
 
 void main()
 {
-    vPosition = position * vec3(0.1, 0.1, 0.1) + t;
+    gl_Position = vec4(position, 1) * projection;
 }

@@ -11,6 +11,7 @@ class SurfaceBall
     public:
         int numPatches;
 
+        GLuint vao;
         GLuint vertices;
         GLuint indices;
 

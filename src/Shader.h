@@ -11,7 +11,7 @@ class Shader
         GLuint program;
         GLuint positionPos;
 
-        Shader(std::string name);
+        Shader(std::string name, bool loadTes);
 };
 
 #endif

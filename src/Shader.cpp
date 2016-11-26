@@ -7,18 +7,30 @@
 GLuint loadShader(std::string name, GLuint shaderType);
 std::string loadFile(std::string name);
 
-Shader::Shader(std::string name)
+Shader::Shader(std::string name, bool loadTes)
 {
+    program = glCreateProgram();
+    
     GLuint vertexShader                 = loadShader(name + ".vs",  GL_VERTEX_SHADER);
     GLuint fragmentShader               = loadShader(name + ".fs",  GL_FRAGMENT_SHADER);
-    GLuint tessellationControlShader    = loadShader(name + ".tcs", GL_TESS_CONTROL_SHADER);
-    GLuint tessellationEvalShader       = loadShader(name + ".tes", GL_TESS_EVALUATION_SHADER);
-
-    program = glCreateProgram();
+ 
     glAttachShader(program, vertexShader);
     glAttachShader(program, fragmentShader);
-//    glAttachShader(program, tessellationControlShader);
-//    glAttachShader(program, tessellationEvalShader);
+
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragmentShader);
+    
+    if (loadTes)
+    {
+        GLuint tessellationControlShader    = loadShader(name + ".tcs", GL_TESS_CONTROL_SHADER);
+        GLuint tessellationEvalShader       = loadShader(name + ".tes", GL_TESS_EVALUATION_SHADER);
+
+        glAttachShader(program, tessellationControlShader);
+        glAttachShader(program, tessellationEvalShader);
+        
+        glDeleteShader(tessellationControlShader);
+        glDeleteShader(tessellationEvalShader);
+    }
 
     glLinkProgram(program);
 
@@ -32,11 +44,6 @@ Shader::Shader(std::string name)
     }
 
     glBindAttribLocation(program, positionPos, "position");
-
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
-    glDeleteShader(tessellationControlShader);
-    glDeleteShader(tessellationEvalShader);
 }
 
 std::string loadFile(std::string name)
