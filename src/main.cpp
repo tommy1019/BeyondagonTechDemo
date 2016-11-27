@@ -6,9 +6,11 @@
 
 #include <SDL2/SDL.h>
 
+#include "Vector3.h"
 #include "Matrix4.h"
 #include "Shader.h"
 #include "SurfaceBall.h"
+#include "Transform.h"
 
 #define WIDTH 800
 #define HEIGHT 600
@@ -92,25 +94,10 @@ int main()
 
     float time = 0;
 
-    Matrix4 projection;
-    projection.initProjection(800, 600, 80 * M_PI / 180, 0.1, 100);
+    Matrix4 projection = Matrix4::initProjection(800, 600, 80 * M_PI / 180, 0.1, 100);
+    Transform::projection = projection;
 
-    Matrix4 translation;
-    translation.initTranslation(0, 0, -3);
-
-    Matrix4 scale;
-    scale.initScale(1, 1, 1);
-
-    Matrix4 rotation;
-    rotation = rotation.initRotation(0, 0, 0);
-
-    Matrix4 transform;
-
-    float x, y, z;
-
-    x = 0;
-    y = 0;
-    z = 0;
+    Transform transform;
 
     float speed = .1;
 
@@ -147,17 +134,17 @@ int main()
             else if (event.type == SDL_KEYDOWN)
             {
                 if (event.key.keysym.sym == SDLK_w)
-                    z += speed;
+                    transform.translation.z += speed;
                 if (event.key.keysym.sym == SDLK_s)
-                    z -= speed;
+                    transform.translation.z -= speed;
                 if (event.key.keysym.sym == SDLK_a)
-                    x += speed;
+                    transform.translation.x += speed;
                 if (event.key.keysym.sym == SDLK_d)
-                    x -= speed;
+                    transform.translation.x -= speed;
                 if (event.key.keysym.sym == SDLK_q)
-                    y += speed;
+                    transform.translation.y += speed;
                 if (event.key.keysym.sym == SDLK_e)
-                    y -= speed;
+                    transform.translation.y -= speed;
             }
         }
 
@@ -167,15 +154,14 @@ int main()
             std::cout << "TIME: " << time << std::endl;
         }
 
-        translation.initTranslation(x, y, z);
-        rotation = rotation.initRotation((time) * M_PI/180, 0, 0);
+        transform.rotation.x = (time) * M_PI/180;
 
         if (filPolys)
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         else
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
  
-        transform = projection * translation * rotation * scale;
+        Matrix4 worldTransform = transform.getTransformMatrix();
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -188,12 +174,12 @@ int main()
         if (drawPoints)
         {
             glUseProgram(shader.program);
-            glUniformMatrix4fv(uProjectionPoint, 1, false, &transform.a[0][0]);
+            glUniformMatrix4fv(uProjectionPoint, 1, false, &worldTransform.a[0][0]);
             glDrawElements(GL_POINTS, ball.numPatches * 16, GL_UNSIGNED_INT, NULL);
         }
 
         glUseProgram(surfaceShader.program);
-        glUniformMatrix4fv(uProjectionSurface, 1, false, &transform.a[0][0]);
+        glUniformMatrix4fv(uProjectionSurface, 1, false, &worldTransform.a[0][0]);
         glUniform1i(uResolution, curResolution);
         glDrawElements(GL_PATCHES, ball.numPatches * 16, GL_UNSIGNED_INT, NULL);
 
