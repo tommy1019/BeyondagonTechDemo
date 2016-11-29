@@ -6,9 +6,16 @@
 
 #include <SDL2/SDL.h>
 
+#include <stdlib.h>
+#include <time.h>
+
+#include <vector>
+
+#include "Entity.h"
 #include "Vector3.h"
 #include "Matrix4.h"
 #include "Shader.h"
+#include "TessellationShader.h"
 #include "SurfaceBall.h"
 #include "Transform.h"
 
@@ -79,25 +86,26 @@ int main()
     glPatchParameteri(GL_PATCH_VERTICES, 16);
     
     Shader shader("res/shader/basic", false);
-    Shader surfaceShader("res/shader/surfaceBall", true);
+    TessellationShader surfaceShader("res/shader/surfaceBall");
 
-    SurfaceBall ball("res/teapot.sball");
+    Entity teapot("res/teapot.sball");
+
+    std::vector<Entity> entities;
+
+    srand(time(NULL));
+
+    for (int i = 0; i < 100; i++)
+        entities.push_back(Entity(teapot.surfaceBall, Transform(Vector3(rand() % 4 - 2, rand() % 4 - 2, -3 + rand() % 2), Vector3(rand() % 360 * M_PI / 180, rand() % 360 * M_PI / 180, rand() % 360 * M_PI / 180), Vector3(.1, .1, .1))));
 
     glEnable(GL_DEPTH_TEST);
     glClearColor(1.0f, 0.0f, 1.0f, 1.0f);
 
     glPointSize(4);
 
-    int uProjectionPoint = glGetUniformLocation(shader.program, "projection");
-    int uProjectionSurface = glGetUniformLocation(surfaceShader.program, "projection");
-    int uResolution = glGetUniformLocation(surfaceShader.program, "resolution");
-
     float time = 0;
 
     Matrix4 projection = Matrix4::initProjection(800, 600, 80 * M_PI / 180, 0.1, 100);
     Transform::projection = projection;
-
-    Transform transform;
 
     float speed = .1;
 
@@ -134,17 +142,17 @@ int main()
             else if (event.type == SDL_KEYDOWN)
             {
                 if (event.key.keysym.sym == SDLK_w)
-                    transform.translation.z += speed;
+                    teapot.transform.translation.z += speed;
                 if (event.key.keysym.sym == SDLK_s)
-                    transform.translation.z -= speed;
+                    teapot.transform.translation.z -= speed;
                 if (event.key.keysym.sym == SDLK_a)
-                    transform.translation.x += speed;
+                    teapot.transform.translation.x += speed;
                 if (event.key.keysym.sym == SDLK_d)
-                    transform.translation.x -= speed;
+                    teapot.transform.translation.x -= speed;
                 if (event.key.keysym.sym == SDLK_q)
-                    transform.translation.y += speed;
+                    teapot.transform.translation.y += speed;
                 if (event.key.keysym.sym == SDLK_e)
-                    transform.translation.y -= speed;
+                    teapot.transform.translation.y -= speed;
             }
         }
 
@@ -154,34 +162,25 @@ int main()
             std::cout << "TIME: " << time << std::endl;
         }
 
-        transform.rotation.x = (time) * M_PI/180;
+        teapot.transform.rotation.x = (time) * M_PI/180;
 
         if (filPolys)
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         else
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
  
-        Matrix4 worldTransform = transform.getTransformMatrix();
-
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        glEnableVertexAttribArray(shader.positionPos);
-        glBindBuffer(GL_ARRAY_BUFFER, ball.vertices);
-        glVertexAttribPointer(shader.positionPos, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), NULL);
-
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ball.indices);
 
         if (drawPoints)
         {
-            glUseProgram(shader.program);
-            glUniformMatrix4fv(uProjectionPoint, 1, false, &worldTransform.a[0][0]);
-            glDrawElements(GL_POINTS, ball.numPatches * 16, GL_UNSIGNED_INT, NULL);
+            teapot.renderPoints(shader);
+            for (int i = 0; i < entities.size(); i++)
+                entities[i].renderPoints(shader);
         }
 
-        glUseProgram(surfaceShader.program);
-        glUniformMatrix4fv(uProjectionSurface, 1, false, &worldTransform.a[0][0]);
-        glUniform1i(uResolution, curResolution);
-        glDrawElements(GL_PATCHES, ball.numPatches * 16, GL_UNSIGNED_INT, NULL);
+        teapot.render(surfaceShader, curResolution);
+        for (int i = 0; i < entities.size(); i++)
+            entities[i].render(surfaceShader, curResolution);
 
         SDL_GL_SwapWindow(mainWindow);
     }

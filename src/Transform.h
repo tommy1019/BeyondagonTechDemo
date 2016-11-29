@@ -14,6 +14,9 @@ class Transform
         Vector3 scale;
 
         Transform();
+        Transform(Vector3 translation, Vector3 rotation, Vector3 scale)
+            :   translation(translation), rotation(rotation), scale(scale)
+            {};
 
         Matrix4 getWorldMatrix();
         Matrix4 getTransformMatrix();

@@ -44,6 +44,13 @@ Shader::Shader(std::string name, bool loadTes)
     }
 
     glBindAttribLocation(program, positionPos, "position");
+
+    uProjectionMatrix = glGetUniformLocation(program, "projection");
+}
+
+void Shader::updateProjectionMatrix(Matrix4 a)
+{
+    glUniformMatrix4fv(uProjectionMatrix, 1, false, &a.a[0][0]);
 }
 
 std::string loadFile(std::string name)
