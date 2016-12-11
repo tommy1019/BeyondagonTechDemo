@@ -94,8 +94,8 @@ int main()
 
     srand(time(NULL));
 
-    for (int i = 0; i < 100; i++)
-        entities.push_back(Entity(teapot.surfaceBall, Transform(Vector3(rand() % 4 - 2, rand() % 4 - 2, -3 + rand() % 2), Vector3(rand() % 360 * M_PI / 180, rand() % 360 * M_PI / 180, rand() % 360 * M_PI / 180), Vector3(.1, .1, .1))));
+//    for (int i = 0; i < 100; i++)
+//        entities.push_back(Entity(teapot.surfaceBall, Transform(Vector3(rand() % 4 - 2, rand() % 4 - 2, -3 + rand() % 2), Vector3(rand() % 360 * M_PI / 180, rand() % 360 * M_PI / 180, rand() % 360 * M_PI / 180), Vector3(.1, .1, .1))));
 
     glEnable(GL_DEPTH_TEST);
     glClearColor(1.0f, 0.0f, 1.0f, 1.0f);
@@ -160,6 +160,7 @@ int main()
         {
             time++;
             std::cout << "TIME: " << time << std::endl;
+            curResolution = abs((int) (cos(M_PI/180 * (time)) * 5)) + 2;
         }
 
         teapot.transform.rotation.x = (time) * M_PI/180;
