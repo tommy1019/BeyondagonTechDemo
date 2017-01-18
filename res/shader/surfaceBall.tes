@@ -6,6 +6,7 @@ in vec3 tcPosition[];
 out vec3 tePosition;
 out vec3 tePatchDistance;
 out vec3 normal;
+out vec2 textureCoord;
 
 uniform mat4 projection;
 
@@ -30,5 +31,6 @@ void main()
 
     tePosition = vec3(getPointOnCurve(p0, p1, p2, p3, gl_TessCoord.y));
     gl_Position = vec4(tePosition, 1) * projection;
+    textureCoord = vec2(gl_TessCoord.x, gl_TessCoord.y); 
     normal = vec3(0, 0, 0);
 }

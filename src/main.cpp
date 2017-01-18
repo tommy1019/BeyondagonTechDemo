@@ -12,6 +12,7 @@
 #include <vector>
 
 #include "Entity.h"
+#include "Texture.h"
 #include "Vector3.h"
 #include "Matrix4.h"
 #include "Shader.h"
@@ -48,7 +49,7 @@ int main()
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
-    SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 0);
+//    SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 0);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
 
@@ -89,6 +90,7 @@ int main()
     TessellationShader surfaceShader("res/shader/surfaceBall");
 
     Entity teapot("res/teapot.sball");
+    Texture texture("res/texture/test.png");
 
     std::vector<Entity> entities;
 
@@ -160,7 +162,7 @@ int main()
         {
             time++;
             std::cout << "TIME: " << time << std::endl;
-            curResolution = abs((int) (cos(M_PI/180 * (time)) * 5)) + 2;
+//            curResolution = abs((int) (cos(M_PI/180 * (time)) * 5)) + 2;
         }
 
         teapot.transform.rotation.x = (time) * M_PI/180;
@@ -179,6 +181,7 @@ int main()
                 entities[i].renderPoints(shader);
         }
 
+        texture.useTexture();
         teapot.render(surfaceShader, curResolution);
         for (int i = 0; i < entities.size(); i++)
             entities[i].render(surfaceShader, curResolution);

@@ -1,10 +1,12 @@
 #version 330
 
+in vec2 textureCoord;
 in vec3 normal;
 out vec4 fragColor;
 
+uniform sampler2D tex;
+
 void main() 
 {
-    float cosTheta = clamp(dot(normal, vec3(0, 0, 0)), 0, 1);
-    fragColor = vec4(1,1,0,1) * cosTheta;
+    fragColor = texture(tex, textureCoord);
 }

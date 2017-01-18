@@ -8,7 +8,7 @@ CC=g++
 LL=g++
 OUTPUT=-o beyondagon
 CFLAGS=-c -Wall -I/usr/local/include
-LFLAGS=-Wall -L/usr/local/lib -lSDL2 -lGLEW -framework OpenGL
+LFLAGS=-Wall -L/usr/local/lib -lSDL2 -lSDL2_image -lGLEW -framework OpenGL
 OFLAG=-o  
 else
 ifeq ($(OS),Linux)
