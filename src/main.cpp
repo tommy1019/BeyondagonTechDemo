@@ -85,7 +85,8 @@ int main()
 	bool running = true;
 
     glPatchParameteri(GL_PATCH_VERTICES, 16);
-    
+    glEnable(GL_TEXTURE_2D);
+
     Shader shader("res/shader/basic", false);
     TessellationShader surfaceShader("res/shader/surfaceBall");
 
@@ -100,7 +101,7 @@ int main()
 //        entities.push_back(Entity(teapot.surfaceBall, Transform(Vector3(rand() % 4 - 2, rand() % 4 - 2, -3 + rand() % 2), Vector3(rand() % 360 * M_PI / 180, rand() % 360 * M_PI / 180, rand() % 360 * M_PI / 180), Vector3(.1, .1, .1))));
 
     glEnable(GL_DEPTH_TEST);
-    glClearColor(1.0f, 0.0f, 1.0f, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
     glPointSize(4);
 
@@ -161,7 +162,7 @@ int main()
         if (translate)
         {
             time++;
-            std::cout << "TIME: " << time << std::endl;
+//            std::cout << "TIME: " << time << std::endl;
 //            curResolution = abs((int) (cos(M_PI/180 * (time)) * 5)) + 2;
         }
 
