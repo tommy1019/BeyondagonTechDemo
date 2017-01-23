@@ -3,14 +3,15 @@
 layout(quads) in;
 
 in vec3 tcPosition[];
+
 out vec3 tePosition;
 out vec3 tePatchDistance;
 out vec3 normal;
 out vec2 textureCoord;
 
-uniform mat4 projection;
+uniform int numPatches;
 
-#define ID gl_InvocationID
+uniform mat4 projection;
 
 vec3 getPointOnCurve(vec3 a0, vec3 a1, vec3 a2, vec3 a3, float t)
 {
@@ -31,6 +32,6 @@ void main()
 
     tePosition = vec3(getPointOnCurve(p0, p1, p2, p3, gl_TessCoord.y));
     gl_Position = vec4(tePosition, 1) * projection;
-    textureCoord = vec2(gl_TessCoord.x, gl_TessCoord.y); 
+    textureCoord = vec2(gl_TessCoord.x, (gl_TessCoord.y + gl_PrimitiveID) / numPatches); 
     normal = vec3(0, 0, 0);
 }
