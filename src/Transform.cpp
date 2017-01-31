@@ -9,7 +9,7 @@ Transform::Transform()
     scale = Vector3(1, 1, 1);
 }
 
-Matrix4 Transform::getWorldMatrix()
+Matrix4 Transform::getTransformMatrix()
 {
     Matrix4 translation = Matrix4::initTranslation(this->translation);
     Matrix4 rotation = Matrix4::initRotation(this->rotation);
@@ -18,7 +18,7 @@ Matrix4 Transform::getWorldMatrix()
     return translation * rotation * scale;
 }
 
-Matrix4 Transform::getTransformMatrix()
+Matrix4 Transform::getProjectionMatrix(Matrix4 transform)
 {
-    return Transform::projection * getWorldMatrix();
+    return transform * Transform::projection;
 }

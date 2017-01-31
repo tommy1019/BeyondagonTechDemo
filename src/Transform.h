@@ -18,8 +18,8 @@ class Transform
             :   translation(translation), rotation(rotation), scale(scale)
             {};
 
-        Matrix4 getWorldMatrix();
         Matrix4 getTransformMatrix();
+        static Matrix4 getProjectionMatrix(Matrix4 transform);
 };
 
 #endif

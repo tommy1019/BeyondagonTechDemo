@@ -166,7 +166,7 @@ int main()
 //            curResolution = abs((int) (cos(M_PI/180 * (time)) * 5)) + 2;
         }
 
-        teapot.transform.rotation.x = (time) * M_PI/180;
+        teapot.transform.rotation.y = (time) * M_PI/180;
 
         if (filPolys)
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -181,6 +181,8 @@ int main()
             for (int i = 0; i < entities.size(); i++)
                 entities[i].renderPoints(shader);
         }
+
+        
 
         texture.useTexture();
         teapot.render(surfaceShader, curResolution);
