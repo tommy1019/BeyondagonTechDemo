@@ -2,7 +2,8 @@
 
 layout(quads) in;
 
-in vec3 tcPosition[];
+in vec3 nPositionO[];
+in vec3 tPositionO[];
 
 out vec3 tePosition;
 out vec3 tePatchDistance;
@@ -40,7 +41,7 @@ void main()
 
     for(int i = 0; i < 16; i += 4)
     {
-        p[i / 4] = getPointOnCurve(tcPosition[i], tcPosition[i + 1], tcPosition[i + 2], tcPosition[i + 3], gl_TessCoord.x);
+        p[i / 4] = getPointOnCurve(tPositionO[i], tPositionO[i + 1], tPositionO[i + 2], tPositionO[i + 3], gl_TessCoord.x);
     }
 
     vec3 tmp[4];
@@ -48,19 +49,25 @@ void main()
     vec3 dv[4];
     for (int i = 0; i < 4; ++i)
     {
-        tmp[0] = tcPosition[i];
-        tmp[1] = tcPosition[i + 4];
-        tmp[2] = tcPosition[i + 8];
-        tmp[3] = tcPosition[i + 12];
+        tmp[0] = nPositionO[i];
+        tmp[1] = nPositionO[i + 4];
+        tmp[2] = nPositionO[i + 8];
+        tmp[3] = nPositionO[i + 12];
 
         dv[i] = getPointOnCurve(tmp[0], tmp[1], tmp[2], tmp[3], gl_TessCoord.x);
     }
 
-    vec3 dvTan = getPointOnDCurve(dv[0], dv[1], dv[2], dv[3], gl_TessCoord.x);
-    vec3 duTan = getPointOnDCurve(p[0], p[1], p[2], p[3], gl_TessCoord.y);
+    vec3 du[4];
+    for(int i = 0; i < 16; i += 4)
+    {
+        du[i / 4] = getPointOnCurve(nPositionO[i], nPositionO[i + 1], nPositionO[i + 2], nPositionO[i + 3], gl_TessCoord.x);
+    }
 
-    tePosition = vec3(getPointOnCurve(p[0], p[1], p[2], p[3], gl_TessCoord.y));
-    gl_Position = vec4(tePosition, 1);
+    vec3 dvTan = getPointOnDCurve(dv[0], dv[1], dv[2], dv[3], gl_TessCoord.x);
+    vec3 duTan = getPointOnDCurve(du[0], du[1], du[2], du[3], gl_TessCoord.y);
+
+    tePosition = getPointOnCurve(p[0], p[1], p[2], p[3], gl_TessCoord.y);
+    gl_Position = vec4(tePosition, 1) * projection;
     textureCoord = vec2(gl_TessCoord.x, (gl_TessCoord.y + gl_PrimitiveID) / numPatches); 
-    normal = (vec4(normalize(cross(duTan, dvTan)), 1)).xyz;
+    normal = normalize(cross(duTan, dvTan));
 }

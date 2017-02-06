@@ -5,9 +5,11 @@ in vec3 position;
 uniform mat4 projection;
 uniform mat4 transform;
 
-out vec3 vPosition;
+out vec3 nPosition;
+out vec3 tPosition;
 
 void main()
 {
-    vPosition = (vec4(position, 1) * projection).xyz;
+    nPosition = position;
+    tPosition = (vec4(position, 1) * transform).xyz;
 }

@@ -1,14 +1,20 @@
 #version 410
 
 layout(vertices = 16) out;
-in vec3 vPosition[];
-out vec3 tcPosition[];
+
+in vec3 nPosition[];
+in vec3 tPosition[];
+
+out vec3 nPositionO[];
+out vec3 tPositionO[];
 
 uniform int resolution;
 
 void main()
 {
-    tcPosition[gl_InvocationID] = vPosition[gl_InvocationID];
+    nPositionO[gl_InvocationID] = nPosition[gl_InvocationID];
+    tPositionO[gl_InvocationID] = tPosition[gl_InvocationID];
+
     if (gl_InvocationID == 0)
     {
         gl_TessLevelInner[0] = resolution;
