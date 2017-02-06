@@ -60,7 +60,7 @@ void main()
     vec3 duTan = getPointOnDCurve(p[0], p[1], p[2], p[3], gl_TessCoord.y);
 
     tePosition = vec3(getPointOnCurve(p[0], p[1], p[2], p[3], gl_TessCoord.y));
-    gl_Position = vec4(tePosition, 1) * projection;
+    gl_Position = vec4(tePosition, 1);
     textureCoord = vec2(gl_TessCoord.x, (gl_TessCoord.y + gl_PrimitiveID) / numPatches); 
-    normal = (vec4(normalize(cross(duTan, dvTan)), 1) * transform).xyz;
+    normal = (vec4(normalize(cross(duTan, dvTan)), 1)).xyz;
 }

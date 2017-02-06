@@ -20,5 +20,5 @@ Matrix4 Transform::getTransformMatrix()
 
 Matrix4 Transform::getProjectionMatrix(Matrix4 transform)
 {
-    return transform * Transform::projection;
+    return Transform::projection * transform;
 }
