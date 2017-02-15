@@ -10,18 +10,23 @@ out vec3 tPositionO[];
 
 uniform int resolution;
 
+uniform bool drawSingle = true;
+uniform int curPatch;
+
 void main()
 {
     nPositionO[gl_InvocationID] = nPosition[gl_InvocationID];
     tPositionO[gl_InvocationID] = tPosition[gl_InvocationID];
 
-    if (gl_InvocationID == 0)
-    {
-        gl_TessLevelInner[0] = resolution;
-        gl_TessLevelInner[1] = resolution;
-        gl_TessLevelOuter[0] = resolution;
-        gl_TessLevelOuter[1] = resolution;
-        gl_TessLevelOuter[2] = resolution;
-        gl_TessLevelOuter[3] = resolution;
-    }
+    int res = resolution;
+
+    if (drawSingle)
+        res = int(gl_PrimitiveID == curPatch) * resolution;
+
+    gl_TessLevelInner[0] = res;
+    gl_TessLevelInner[1] = res;
+    gl_TessLevelOuter[0] = res;
+    gl_TessLevelOuter[1] = res;
+    gl_TessLevelOuter[2] = res;
+    gl_TessLevelOuter[3] = res;
 }

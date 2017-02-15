@@ -120,6 +120,9 @@ int main()
     bool filPolys = true;
     bool translate = false;
 
+    bool drawSingle = false;
+    int curPatch = 0;
+
     while (running)
     {
         SDL_Event event;
@@ -143,6 +146,12 @@ int main()
                     curResolution++;
                 if (event.key.keysym.sym == SDLK_k)
                     curResolution--;
+                if (event.key.keysym.sym == SDLK_u)
+                    curPatch++;
+                if (event.key.keysym.sym == SDLK_j)
+                    curPatch--;
+                if (event.key.keysym.sym == SDLK_y)
+                    drawSingle = !drawSingle;
             }
             else if (event.type == SDL_KEYDOWN)
             {
@@ -183,6 +192,8 @@ int main()
             for (int i = 0; i < entities.size(); i++)
                 entities[i].renderPoints(shader);
         }
+
+        surfaceShader.updateGlobals(drawSingle, curPatch);
 
         texture.useTexture();
         teapot.render(surfaceShader, curResolution);

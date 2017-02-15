@@ -48,8 +48,8 @@ Shader::Shader(std::string name, bool loadTes)
     uTransformMatrix = glGetUniformLocation(program, "transform");
     uProjectionMatrix = glGetUniformLocation(program, "projection");
 
-    std::cout << name << " TRANSFORM: " << uTransformMatrix << std::endl;
-    std::cout << name << " PROJECTION:" << uProjectionMatrix << std::endl;
+    std::cout << name << "  uTransform   : " << uTransformMatrix << std::endl;
+    std::cout << name << "  uProjection  : " << uProjectionMatrix << std::endl;
 }
 
 void Shader::updateTransformMatrix(Matrix4 a)
