@@ -103,7 +103,7 @@ int main()
 //        entities.push_back(Entity(teapot.surfaceBall, Transform(Vector3(rand() % 4 - 2, rand() % 4 - 2, -3 + rand() % 2), Vector3(rand() % 360 * M_PI / 180, rand() % 360 * M_PI / 180, rand() % 360 * M_PI / 180), Vector3(.1, .1, .1))));
 
     glEnable(GL_DEPTH_TEST);
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearColor(0.7f, 1.0f, 0.95f, 1.0f);
 
     glPointSize(4);
 
@@ -112,7 +112,7 @@ int main()
     Matrix4 projection = Matrix4::initProjection(800, 600, 80 * M_PI / 180, 0.1, 100);
     Transform::projection = projection;
 
-    float speed = .1;
+    float speed = .05;
 
     int curResolution = 1;
 
@@ -122,6 +122,10 @@ int main()
 
     bool drawSingle = false;
     int curPatch = 0;
+
+    bool keys[256];
+    for (int i = 0; i < 256; i++)
+        keys[i] = false;
 
     while (running)
     {
@@ -136,6 +140,9 @@ int main()
             }
             else if (event.type == SDL_KEYUP)
             {
+                if (event.key.keysym.sym < 256)
+                    keys[event.key.keysym.sym] = false;
+
                 if (event.key.keysym.sym == SDLK_p)
                     drawPoints = !drawPoints;
                 if (event.key.keysym.sym == SDLK_o)
@@ -155,20 +162,23 @@ int main()
             }
             else if (event.type == SDL_KEYDOWN)
             {
-                if (event.key.keysym.sym == SDLK_w)
-                    teapot.transform.translation.z += speed;
-                if (event.key.keysym.sym == SDLK_s)
-                    teapot.transform.translation.z -= speed;
-                if (event.key.keysym.sym == SDLK_a)
-                    teapot.transform.translation.x += speed;
-                if (event.key.keysym.sym == SDLK_d)
-                    teapot.transform.translation.x -= speed;
-                if (event.key.keysym.sym == SDLK_q)
-                    teapot.transform.translation.y += speed;
-                if (event.key.keysym.sym == SDLK_e)
-                    teapot.transform.translation.y -= speed;
+                if (event.key.keysym.sym < 256) 
+                    keys[event.key.keysym.sym] = true;
             }
         }
+
+        if (keys[SDLK_w])
+            teapot.transform.translation.z += speed;
+        if (keys[SDLK_s])
+            teapot.transform.translation.z -= speed;
+        if (keys[SDLK_a])
+            teapot.transform.translation.x += speed;
+        if (keys[SDLK_d])
+            teapot.transform.translation.x -= speed;
+        if (keys[SDLK_q])
+            teapot.transform.translation.y += speed;
+        if (keys[SDLK_e])
+            teapot.transform.translation.y -= speed;
 
         if (translate)
         {
