@@ -19,6 +19,7 @@
 #include "TessellationShader.h"
 #include "SurfaceBall.h"
 #include "Transform.h"
+#include "Camera.h"
 
 #define WIDTH 800
 #define HEIGHT 600
@@ -109,6 +110,8 @@ int main()
 
     float time = 0;
 
+    Camera camera;
+    
     Matrix4 projection = Matrix4::initProjection(800, 600, 80 * M_PI / 180, 0.1, 100);
     Transform::projection = projection;
 
@@ -122,6 +125,8 @@ int main()
 
     bool drawSingle = false;
     int curPatch = 0;
+    
+    bool lockedMouse = true;
 
     bool keys[256];
     for (int i = 0; i < 256; i++)
@@ -159,33 +164,53 @@ int main()
                     curPatch--;
                 if (event.key.keysym.sym == SDLK_y)
                     drawSingle = !drawSingle;
+                if (event.key.keysym.sym == SDLK_z)
+                    lockedMouse = !lockedMouse;
             }
             else if (event.type == SDL_KEYDOWN)
             {
                 if (event.key.keysym.sym < 256) 
                     keys[event.key.keysym.sym] = true;
             }
+            else if (event.type == SDL_MOUSEMOTION)
+            {
+                if (lockedMouse)
+                {
+                    float dx = (float)(WIDTH / 2  - event.motion.x) / WIDTH;
+                    float dy = (float)(HEIGHT / 2 - event.motion.y) /  HEIGHT;
+                
+                    camera.rotation = camera.rotation * Quaternion::initRotation(Vector3(0, 1, 0), -dx).normalized();
+                    camera.rotation = camera.rotation * Quaternion::initRotation(camera.rotation.getLeft(), dy).normalized();
+                
+                    //print q
+                    std::cout << "Camera rot: (" << camera.rotation.x << "," << camera.rotation.y << "," << camera.rotation.z << "," << camera.rotation.w << ")" << std::endl;
+                    
+                    SDL_WarpMouseInWindow(mainWindow, WIDTH / 2, HEIGHT / 2);
+                }
+            }
         }
+        
+        Vector3 moveAmt;
 
         if (keys[SDLK_w])
-            teapot.transform.translation.z += speed;
+            camera.translation = camera.translation - camera.rotation.getForward() * 0.1;
         if (keys[SDLK_s])
-            teapot.transform.translation.z -= speed;
+            camera.translation = camera.translation - camera.rotation.getBack() * 0.1;
         if (keys[SDLK_a])
-            teapot.transform.translation.x += speed;
+            camera.translation = camera.translation + camera.rotation.getLeft() * 0.1;
         if (keys[SDLK_d])
-            teapot.transform.translation.x -= speed;
+            camera.translation = camera.translation + camera.rotation.getRight() * 0.1;
         if (keys[SDLK_q])
-            teapot.transform.translation.y += speed;
+            camera.translation = camera.translation - camera.rotation.getUp() * 0.1;
         if (keys[SDLK_e])
-            teapot.transform.translation.y -= speed;
+            camera.translation = camera.translation - camera.rotation.getDown() * 0.1;
 
+        moveAmt * speed;
+        
+        
+        
         if (translate)
-        {
             time++;
-//            std::cout << "TIME: " << time << std::endl;
-//            curResolution = abs((int) (cos(M_PI/180 * (time)) * 5)) + 2;
-        }
 
         teapot.transform.rotation.z = (time) * M_PI/180;
 
@@ -198,17 +223,17 @@ int main()
 
         if (drawPoints)
         {
-            teapot.renderPoints(shader);
+            teapot.renderPoints(shader, camera);
             for (int i = 0; i < entities.size(); i++)
-                entities[i].renderPoints(shader);
+                entities[i].renderPoints(shader, camera);
         }
 
         surfaceShader.updateGlobals(drawSingle, curPatch);
 
         texture.useTexture();
-        teapot.render(surfaceShader, curResolution);
+        teapot.render(surfaceShader, curResolution, camera);
         for (int i = 0; i < entities.size(); i++)
-            entities[i].render(surfaceShader, curResolution);
+            entities[i].render(surfaceShader, curResolution, camera);
 
         SDL_GL_SwapWindow(mainWindow);
     }

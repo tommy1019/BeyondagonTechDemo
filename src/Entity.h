@@ -7,6 +7,7 @@
 #include "TessellationShader.h"
 #include "Transform.h"
 #include "SurfaceBall.h"
+#include "Camera.h"
 
 class Entity
 {
@@ -17,8 +18,8 @@ class Entity
         Entity(SurfaceBall surfaceBall, Transform transform = Transform());
         Entity(std::string surfaceFile, Transform transform = Transform());
 
-        void render(TessellationShader shader, int resolution);
-        void renderPoints(Shader shader);
+        void render(TessellationShader shader, int resolution, Camera camera);
+        void renderPoints(Shader shader, Camera camera);
 };
 
 #endif

@@ -27,3 +27,10 @@ Vector3 Vector3::operator-(const Vector3 a)
                     this->y - a.y,
                     this->z - a.z);
 }
+
+Vector3 Vector3::operator*(const float a)
+{
+    return Vector3( this->x * a,
+                    this->y * a,
+                    this->z * a);
+}

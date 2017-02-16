@@ -14,6 +14,8 @@ struct Vector3
 
         Vector3 operator+(const Vector3 a);
         Vector3 operator-(const Vector3 a);
+    
+        Vector3 operator*(const float a);
 };
 
 #endif

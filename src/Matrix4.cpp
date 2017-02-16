@@ -23,6 +23,23 @@ Matrix4 Matrix4::initScale(Vector3 s)
 
     return res;
 }
+
+Matrix4 Matrix4::initRotation(Quaternion r)
+{
+    return initRotation(r.getForward(), r.getUp(), r.getRight());
+}
+
+Matrix4 Matrix4::initRotation(Vector3 f, Vector3 u, Vector3 r)
+{
+    Matrix4 res;
+    
+    res.a[0][0] = r.x;	res.a[0][1] = r.y;	res.a[0][2] = r.z;	res.a[0][3] = 0;
+    res.a[1][0] = u.x;	res.a[1][1] = u.y;	res.a[1][2] = u.z;	res.a[1][3] = 0;
+    res.a[2][0] = f.x;	res.a[2][1] = f.y;	res.a[2][2] = f.z;	res.a[2][3] = 0;
+    res.a[3][0] = 0;	res.a[3][1] = 0;	res.a[3][2] = 0;	res.a[3][3] = 1;
+    
+    return res;
+}
     
 Matrix4 Matrix4::initRotation(Vector3 r)
 {

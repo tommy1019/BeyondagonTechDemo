@@ -9,11 +9,15 @@ out vec3 tePosition;
 out vec3 tePatchDistance;
 out vec3 normal;
 out vec2 textureCoord;
+out vec3 color;
 
 uniform int numPatches;
 
 uniform mat4 transform;
 uniform mat4 projection;
+
+uniform bool drawSingle;
+uniform int selectedPatch;
 
 vec3 getPointOnCurve(vec3 a0, vec3 a1, vec3 a2, vec3 a3, float t)
 {
@@ -62,6 +66,12 @@ void main()
     {
         du[i / 4] = getPointOnCurve(nPositionO[i], nPositionO[i + 1], nPositionO[i + 2], nPositionO[i + 3], gl_TessCoord.x);
     }
+
+
+    if (!drawSingle && (gl_PrimitiveID == selectedPatch))
+        color = vec3(0.8f, 0.8f, 1.0f);
+    else
+        color = vec3(1.0f, 1.0f, 1.0f);
 
     vec3 dvTan = getPointOnDCurve(dv[0], dv[1], dv[2], dv[3], gl_TessCoord.x);
     vec3 duTan = getPointOnDCurve(du[0], du[1], du[2], du[3], gl_TessCoord.y);

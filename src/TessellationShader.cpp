@@ -9,18 +9,18 @@ TessellationShader::TessellationShader(std::string name)
     uNumPatches = glGetUniformLocation(program, "numPatches");
 
     uDrawSingle = glGetUniformLocation(program, "drawSingle");
-    uCurPatch = glGetUniformLocation(program, "curPatch");
+    uSelectedPatch = glGetUniformLocation(program, "selectedPatch");
 
     std::cout << name << "  uResolution  : " << uResolution << std::endl;
     std::cout << name << "  uNumPatches  : " << uNumPatches << std::endl;
     std::cout << name << "  uDrawSingle  : " << uDrawSingle << std::endl;
-    std::cout << name << "  uCurPatch    : " << uCurPatch << std::endl;
+    std::cout << name << "  uSelePatch   : " << uSelectedPatch << std::endl;
 }
 
-void TessellationShader::updateGlobals(bool drawSingle, int curPatch)
+void TessellationShader::updateGlobals(bool drawSingle, int selectedPatch)
 {
     glUniform1i(uDrawSingle, drawSingle);
-    glUniform1i(uCurPatch, curPatch);   
+    glUniform1i(uSelectedPatch, selectedPatch);
 }
 
 void TessellationShader::updateResolution(int r)

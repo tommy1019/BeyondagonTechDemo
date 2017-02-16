@@ -10,8 +10,8 @@ out vec3 tPositionO[];
 
 uniform int resolution;
 
-uniform bool drawSingle = true;
-uniform int curPatch;
+uniform bool drawSingle;
+uniform int selectedPatch;
 
 void main()
 {
@@ -21,7 +21,7 @@ void main()
     int res = resolution;
 
     if (drawSingle)
-        res = int(gl_PrimitiveID == curPatch) * resolution;
+        res = int(gl_PrimitiveID == selectedPatch) * resolution;
 
     gl_TessLevelInner[0] = res;
     gl_TessLevelInner[1] = res;

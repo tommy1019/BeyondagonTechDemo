@@ -12,12 +12,12 @@ Entity::Entity(std::string surfaceFile, Transform transform)
 {
 }
 
-void Entity::render(TessellationShader shader, int resolution)
+void Entity::render(TessellationShader shader, int resolution, Camera camera)
 {
     glUseProgram(shader.program);
 
-    Matrix4 transformMatrix = transform.getTransformMatrix();
-    Matrix4 projectionMatrix = Transform::projection; //Transform::getProjectionMatrix(transformMatrix);
+    Matrix4 transformMatrix = camera.getTransformMatrix() * transform.getTransformMatrix();
+    Matrix4 projectionMatrix = Transform::projection;
 
     shader.updateTransformMatrix(transformMatrix);
     shader.updateProjectionMatrix(projectionMatrix);
@@ -29,11 +29,11 @@ void Entity::render(TessellationShader shader, int resolution)
     glDrawElements(GL_PATCHES, surfaceBall.numPatches * 16, GL_UNSIGNED_INT, NULL);
 }
 
-void Entity::renderPoints(Shader shader)
+void Entity::renderPoints(Shader shader, Camera camera)
 {
     glUseProgram(shader.program);
     
-    Matrix4 transformMatrix = transform.getTransformMatrix();
+    Matrix4 transformMatrix = camera.getTransformMatrix() * transform.getTransformMatrix();
     Matrix4 projectionMatrix = Transform::getProjectionMatrix(transformMatrix);
 
     shader.updateTransformMatrix(transformMatrix);
