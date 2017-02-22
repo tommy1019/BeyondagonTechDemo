@@ -58,7 +58,7 @@ void main()
         tmp[2] = nPositionO[i + 8];
         tmp[3] = nPositionO[i + 12];
 
-        dv[i] = getPointOnCurve(tmp[0], tmp[1], tmp[2], tmp[3], gl_TessCoord.x);
+        dv[i] = getPointOnCurve(tmp[0], tmp[1], tmp[2], tmp[3], gl_TessCoord.y);
     }
 
     vec3 du[4];

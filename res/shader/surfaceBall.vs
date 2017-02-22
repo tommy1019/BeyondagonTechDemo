@@ -10,6 +10,6 @@ out vec3 tPosition;
 
 void main()
 {
-    nPosition = position;
-    tPosition = (vec4(position, 1) * transform).xyz;
+    nPosition = (vec4(position, 1) * transform).xyz;
+    tPosition = (vec4(position, 1)).xyz;
 }

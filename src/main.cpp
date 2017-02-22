@@ -91,7 +91,7 @@ int main()
     Shader shader("res/shader/basic", false);
     TessellationShader surfaceShader("res/shader/surfaceBall");
 
-    Entity teapot("res/teapot.sball");
+    Entity teapot("res/plane.sball");
     Texture texture("res/texture/teapot.png");
 
     teapot.transform.rotation.x = (-90) * M_PI/180;
@@ -100,8 +100,21 @@ int main()
 
     srand(time(NULL));
 
-//    for (int i = 0; i < 100; i++)
-//        entities.push_back(Entity(teapot.surfaceBall, Transform(Vector3(rand() % 4 - 2, rand() % 4 - 2, -3 + rand() % 2), Vector3(rand() % 360 * M_PI / 180, rand() % 360 * M_PI / 180, rand() % 360 * M_PI / 180), Vector3(.1, .1, .1))));
+    for (int i = 0; i < 10; i++)
+        for (int j = 0; j < 10; j++)
+            for (int k = 0; k < 10; k++)
+            {
+                Entity e = Entity(teapot.surfaceBall);
+                
+                Transform t;
+                t.translation = Vector3(i, j, k);
+                t.rotation = Vector3(rand() % 360 * M_PI / 180, rand() % 360 * M_PI / 180, rand() % 360 * M_PI / 180);
+                t.scale = Vector3(.1, .1, .1);
+                
+                e.transform = t;
+                
+                //entities.push_back(e);
+            }
 
     glEnable(GL_DEPTH_TEST);
     glClearColor(0.7f, 1.0f, 0.95f, 1.0f);
@@ -117,7 +130,7 @@ int main()
 
     float speed = .05;
 
-    int curResolution = 1;
+    int curResolution = 5;
 
     bool drawPoints = false;
     bool filPolys = true;
@@ -181,33 +194,24 @@ int main()
                 
                     camera.rotation = camera.rotation * Quaternion::initRotation(Vector3(0, 1, 0), -dx).normalized();
                     camera.rotation = camera.rotation * Quaternion::initRotation(camera.rotation.getLeft(), dy).normalized();
-                
-                    //print q
-                    std::cout << "Camera rot: (" << camera.rotation.x << "," << camera.rotation.y << "," << camera.rotation.z << "," << camera.rotation.w << ")" << std::endl;
                     
                     SDL_WarpMouseInWindow(mainWindow, WIDTH / 2, HEIGHT / 2);
                 }
             }
         }
-        
-        Vector3 moveAmt;
 
         if (keys[SDLK_w])
-            camera.translation = camera.translation - camera.rotation.getForward() * 0.1;
+            camera.translation = camera.translation - camera.rotation.getForward() * speed;
         if (keys[SDLK_s])
-            camera.translation = camera.translation - camera.rotation.getBack() * 0.1;
+            camera.translation = camera.translation - camera.rotation.getBack() * speed;
         if (keys[SDLK_a])
-            camera.translation = camera.translation + camera.rotation.getLeft() * 0.1;
+            camera.translation = camera.translation + camera.rotation.getLeft() * speed;
         if (keys[SDLK_d])
-            camera.translation = camera.translation + camera.rotation.getRight() * 0.1;
+            camera.translation = camera.translation + camera.rotation.getRight() * speed;
         if (keys[SDLK_q])
-            camera.translation = camera.translation - camera.rotation.getUp() * 0.1;
+            camera.translation = camera.translation - camera.rotation.getUp() * speed;
         if (keys[SDLK_e])
-            camera.translation = camera.translation - camera.rotation.getDown() * 0.1;
-
-        moveAmt * speed;
-        
-        
+            camera.translation = camera.translation - camera.rotation.getDown() * speed;
         
         if (translate)
             time++;
