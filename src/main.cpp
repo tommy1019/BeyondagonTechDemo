@@ -91,7 +91,7 @@ int main()
     Shader shader("res/shader/basic", false);
     TessellationShader surfaceShader("res/shader/surfaceBall");
 
-    Entity teapot("res/plane.sball");
+    Entity teapot("res/teapot.sball");
     Texture texture("res/texture/teapot.png");
 
     teapot.transform.rotation.x = (-90) * M_PI/180;
@@ -121,7 +121,7 @@ int main()
 
     glPointSize(4);
 
-    float time = 0;
+    float gameTime = 0;
 
     Camera camera;
     
@@ -144,9 +144,26 @@ int main()
     bool keys[256];
     for (int i = 0; i < 256; i++)
         keys[i] = false;
-
+    
+    long double startTime = time(NULL) * 1000;
+    long double secondCounter = 0;
+    int frames;
+    
     while (running)
     {
+        long double curTime = time(NULL) * 1000;
+        long double dTime = curTime - startTime;
+        startTime = curTime;
+        
+        secondCounter += dTime;
+        frames++;
+        if (secondCounter > 1000)
+        {
+            secondCounter -= 1000;
+            std::cout << "FPS: " << frames << std::endl;
+            frames = 0;
+        }
+
         SDL_Event event;
 
         while(SDL_PollEvent(&event))
@@ -214,9 +231,9 @@ int main()
             camera.translation = camera.translation - camera.rotation.getDown() * speed;
         
         if (translate)
-            time++;
+            gameTime++;
 
-        teapot.transform.rotation.z = (time) * M_PI/180;
+        teapot.transform.rotation.z = (gameTime) * M_PI/180;
 
         if (filPolys)
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
