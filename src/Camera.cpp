@@ -8,8 +8,8 @@ Camera::Camera()
 
 Matrix4 Camera::getTransformMatrix()
 {
-    Matrix4 translation = Matrix4::initTranslation(Vector3(-this->translation.x, -this->translation.y, -this->translation.z));
-    Matrix4 rotation = Matrix4::initRotation(this->rotation);
+    Matrix4 transl = Matrix4::initTranslation(Vector3(-this->translation.x, -this->translation.y, -this->translation.z));
+    Matrix4 rot = Matrix4::initRotation(this->rotation);
     
-    return rotation * translation;
+    return rot * transl;
 }

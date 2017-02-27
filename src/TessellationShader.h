@@ -11,6 +11,8 @@ class TessellationShader : public Shader
 
         GLuint uDrawSingle;
         GLuint uSelectedPatch;
+    
+        GLuint uEyePos;
 
         TessellationShader(std::string name);
 
@@ -18,6 +20,8 @@ class TessellationShader : public Shader
         void updateNumPatches(int n);
 
         void updateGlobals(bool drawSingle, int selectedPatch);
+    
+        void updateEyePos(Vector3 e);
 };
 
 #endif

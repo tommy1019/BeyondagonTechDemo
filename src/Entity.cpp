@@ -17,7 +17,7 @@ void Entity::render(TessellationShader shader, int resolution, Camera camera)
     glUseProgram(shader.program);
 
     Matrix4 transformMatrix = transform.getTransformMatrix();
-    Matrix4 projectionMatrix = Transform::projection * camera.getTransformMatrix() * transformMatrix ;
+    Matrix4 projectionMatrix = Transform::projection * camera.getTransformMatrix() * transformMatrix;
 
     shader.updateTransformMatrix(transformMatrix);
     shader.updateProjectionMatrix(projectionMatrix);

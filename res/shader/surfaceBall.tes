@@ -8,6 +8,7 @@ in vec3 tPositionO[];
 out vec3 tePosition;
 out vec3 tePatchDistance;
 out vec3 normal;
+out vec3 position;
 out vec2 textureCoord;
 out vec3 color;
 
@@ -78,6 +79,7 @@ void main()
 
     tePosition = getPointOnCurve(p[0], p[1], p[2], p[3], gl_TessCoord.y);
     gl_Position = vec4(tePosition, 1) * projection;
-    textureCoord = vec2(gl_TessCoord.x, (gl_TessCoord.y + gl_PrimitiveID) / numPatches); 
+    position = gl_Position.xyz;
+    textureCoord = vec2(gl_TessCoord.x, (gl_TessCoord.y + gl_PrimitiveID) / numPatches);
     normal = normalize(cross(duTan, dvTan));
 }

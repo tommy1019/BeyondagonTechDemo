@@ -92,7 +92,7 @@ int main()
     TessellationShader surfaceShader("res/shader/surfaceBall");
 
     Entity teapot("res/teapot.sball");
-    Texture texture("res/texture/teapot.png");
+    Texture texture("res/texture/test.png");
 
     teapot.transform.rotation.x = (-90) * M_PI/180;
 
@@ -250,6 +250,7 @@ int main()
         }
 
         surfaceShader.updateGlobals(drawSingle, curPatch);
+        surfaceShader.updateEyePos(camera.translation);
 
         texture.useTexture();
         teapot.render(surfaceShader, curResolution, camera);
