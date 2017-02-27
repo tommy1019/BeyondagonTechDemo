@@ -13,7 +13,7 @@ uniform vec3 eyePos;
 
 void main() 
 {
-    vec3 ambientAmt = vec3(.05, .05, .05);
+    vec3 ambientAmt = vec3(.08, .08, .08);
     vec3 directionalLight = normalize(vec3(1, -1, -1));
     vec3 specularColor = vec3(1, 1, 1);
     float materialShininess = 20;

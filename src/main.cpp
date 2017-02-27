@@ -92,7 +92,7 @@ int main()
     TessellationShader surfaceShader("res/shader/surfaceBall");
 
     Entity teapot("res/teapot.sball");
-    Texture texture("res/texture/test.png");
+    Texture texture("res/texture/teapot.png");
 
     teapot.transform.rotation.x = (-90) * M_PI/180;
 
