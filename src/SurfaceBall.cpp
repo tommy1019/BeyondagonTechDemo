@@ -5,38 +5,74 @@
 
 #include <iostream>
 
-SurfaceBall::SurfaceBall(std::string fileName)
+#include <stdint.h>
+
+SurfaceBall::SurfaceBall(std::string fileName, bool compressed)
 {
-    std::ifstream in(fileName);
-
-    in >> numPatches;
-
+    uint32_t numPatches;
+    uint32_t numVertices;
+    
     std::vector<GLuint> patches;
-
-    for (int i = 0; i < numPatches; i++)
+    std::vector<float> verticesTmp;
+    
+    if (!compressed)
     {
-        for (int j = 0; j < 16; j++)
-        {
-            GLuint curNum;
+        std::ifstream in(fileName);
 
-            in >> curNum;
+        in >> numPatches;
+
+        for (int i = 0; i < numPatches; i++)
+        {
+            for (int j = 0; j < 16; j++)
+            {
+                GLuint curNum;
+
+                in >> curNum;
             
-            patches.push_back(curNum - 1);
+                patches.push_back(curNum - 1);
+            }
+        }
+
+        in >> numVertices;
+        
+        for (int i = 0; i < numVertices * 3; i++)
+        {
+            float a;
+            in >> a;
+            verticesTmp.push_back(a);
         }
     }
-
-    int numVertices;
-    in >> numVertices;
-
-    std::vector<float> verticesTmp;
-
-    for (int i = 0; i < numVertices * 3; i++)
+    else
     {
-        float a;
-        in >> a;
-        verticesTmp.push_back(a);
+        std::ifstream in(fileName, std::ios::binary);
+        
+        in.read((char*) &numPatches, 4);
+        in.read((char*) &numVertices, 4);
+        
+        for (int i = 0; i < numPatches; i++)
+        {
+            for (int j = 0; j < 16; j++)
+            {
+                GLuint curNum;
+                
+                in.read((char*) &curNum, 4);
+                
+                patches.push_back(curNum - 1);
+            }
+        }
+        
+        for (int i = 0; i < numVertices * 3; i++)
+        {
+            float a;
+            
+            in.read((char*) &a, 4);
+            
+            verticesTmp.push_back(a);
+        }
     }
-
+    
+    this->numPatches = numPatches;
+    
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
 

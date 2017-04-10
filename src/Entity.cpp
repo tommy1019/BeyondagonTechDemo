@@ -6,8 +6,8 @@ Entity::Entity(SurfaceBall surfaceBall, Transform transform)
 {
 }
 
-Entity::Entity(std::string surfaceFile, Transform transform)
-:   surfaceBall(surfaceFile),
+Entity::Entity(std::string surfaceFile, bool compressed, Transform transform)
+:   surfaceBall(surfaceFile, compressed),
     transform(transform)
 {
 }

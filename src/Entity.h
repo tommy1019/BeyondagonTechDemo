@@ -16,7 +16,7 @@ class Entity
         Transform transform;
 
         Entity(SurfaceBall surfaceBall, Transform transform = Transform());
-        Entity(std::string surfaceFile, Transform transform = Transform());
+        Entity(std::string surfaceFile, bool compressed, Transform transform = Transform());
 
         void render(TessellationShader shader, int resolution, Camera camera);
         void renderPoints(Shader shader, Camera camera);

@@ -15,7 +15,7 @@ class SurfaceBall
         GLuint vertices;
         GLuint indices;
 
-        SurfaceBall(std::string fileName);
+        SurfaceBall(std::string fileName, bool compressed);
 };
 
 #endif
