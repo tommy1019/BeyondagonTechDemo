@@ -46,6 +46,15 @@ SurfaceBall::SurfaceBall(std::string fileName, bool compressed)
     {
         std::ifstream in(fileName, std::ios::binary);
         
+        uint32_t magicNum;
+        in.read((char*) &magicNum, 4);
+        
+        if (magicNum != 1279345235)
+        {
+            std::cout << "Error reading model: " << fileName << std::endl;
+            return;
+        }
+        
         in.read((char*) &numPatches, 4);
         in.read((char*) &numVertices, 4);
         
