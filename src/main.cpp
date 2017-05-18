@@ -26,21 +26,32 @@
 
 #define WINDOW_TITLE "Beyondagon Tech Demo"
 
-void checkSDLError()
-{
-	std::string error = SDL_GetError();
-	if (error != "")
-	{
-		std::cout << "Error (SDL): " << error << std::endl;
-		SDL_ClearError();
-	}
-}
+void handelInput();
+void checkSDLError();
+
+bool running = true;
+
+bool lockedMouse = true;
+float speed = .05;
+
+int curResolution = 5;
+
+bool drawPoints = false;
+bool filPolys = true;
+bool translate = false;
+
+bool drawSingle = false;
+int curPatch = 0;
+
+bool keys[256];
+
+SDL_Window *mainWindow;
+SDL_GLContext mainContext;
+
+Camera camera;
 
 int main()
 {
-    SDL_Window *mainWindow;
-    SDL_GLContext mainContext;
-
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
         std::cout << "Error initlizating sdl" << std::endl;
@@ -50,7 +61,7 @@ int main()
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
-//    SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 0);
+    //    SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 0);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
 
@@ -83,8 +94,6 @@ int main()
     SDL_GL_GetAttribute(SDL_GL_ACCELERATED_VISUAL, &softwareRendering);
     std::cout << "Gl Accelerated Visual: " << softwareRendering << std::endl;
 
-	bool running = true;
-
     glPatchParameteri(GL_PATCH_VERTICES, 16);
     glEnable(GL_TEXTURE_2D);
 
@@ -92,7 +101,7 @@ int main()
     TessellationShader surfaceShader("res/shader/surfaceBall");
 
     Entity teapot("res/teapot.sball", true);
-    Texture texture("res/texture/teapot.png");
+    Texture texture("res/texture/test.png");
 
     teapot.transform.rotation.x = (-90) * M_PI/180;
 
@@ -113,7 +122,7 @@ int main()
                 
                 e.transform = t;
                 
-                //entities.push_back(e);
+//                entities.push_back(e);
             }
 
     glEnable(GL_DEPTH_TEST);
@@ -122,26 +131,10 @@ int main()
     glPointSize(4);
 
     float gameTime = 0;
-
-    Camera camera;
     
     Matrix4 projection = Matrix4::initProjection(800, 600, 80 * M_PI / 180, 0.1, 100);
     Transform::projection = projection;
 
-    float speed = .05;
-
-    int curResolution = 5;
-
-    bool drawPoints = false;
-    bool filPolys = true;
-    bool translate = false;
-
-    bool drawSingle = false;
-    int curPatch = 0;
-    
-    bool lockedMouse = true;
-
-    bool keys[256];
     for (int i = 0; i < 256; i++)
         keys[i] = false;
     
@@ -163,76 +156,12 @@ int main()
             std::cout << "FPS: " << frames << std::endl;
             frames = 0;
         }
-
-        SDL_Event event;
-
-        while(SDL_PollEvent(&event))
-        {
-            if (event.type == SDL_QUIT)
-            {
-                running = false;
-                continue;
-            }
-            else if (event.type == SDL_KEYUP)
-            {
-                if (event.key.keysym.sym < 256)
-                    keys[event.key.keysym.sym] = false;
-
-                if (event.key.keysym.sym == SDLK_p)
-                    drawPoints = !drawPoints;
-                if (event.key.keysym.sym == SDLK_o)
-                    filPolys = !filPolys;
-                if (event.key.keysym.sym == SDLK_t)
-                    translate = !translate;
-                if (event.key.keysym.sym == SDLK_i)
-                    curResolution++;
-                if (event.key.keysym.sym == SDLK_k)
-                    curResolution--;
-                if (event.key.keysym.sym == SDLK_u)
-                    curPatch++;
-                if (event.key.keysym.sym == SDLK_j)
-                    curPatch--;
-                if (event.key.keysym.sym == SDLK_y)
-                    drawSingle = !drawSingle;
-                if (event.key.keysym.sym == SDLK_z)
-                    lockedMouse = !lockedMouse;
-            }
-            else if (event.type == SDL_KEYDOWN)
-            {
-                if (event.key.keysym.sym < 256) 
-                    keys[event.key.keysym.sym] = true;
-            }
-            else if (event.type == SDL_MOUSEMOTION)
-            {
-                if (lockedMouse)
-                {
-                    float dx = (float)(WIDTH / 2  - event.motion.x) / WIDTH;
-                    float dy = (float)(HEIGHT / 2 - event.motion.y) /  HEIGHT;
-                
-                    camera.rotation = camera.rotation * Quaternion::initRotation(Vector3(0, 1, 0), -dx).normalized();
-                    camera.rotation = camera.rotation * Quaternion::initRotation(camera.rotation.getLeft(), dy).normalized();
-                    
-                    SDL_WarpMouseInWindow(mainWindow, WIDTH / 2, HEIGHT / 2);
-                }
-            }
-        }
-
-        if (keys[SDLK_w])
-            camera.translation = camera.translation - camera.rotation.getForward() * speed;
-        if (keys[SDLK_s])
-            camera.translation = camera.translation - camera.rotation.getBack() * speed;
-        if (keys[SDLK_a])
-            camera.translation = camera.translation + camera.rotation.getLeft() * speed;
-        if (keys[SDLK_d])
-            camera.translation = camera.translation + camera.rotation.getRight() * speed;
-        if (keys[SDLK_q])
-            camera.translation = camera.translation - camera.rotation.getUp() * speed;
-        if (keys[SDLK_e])
-            camera.translation = camera.translation - camera.rotation.getDown() * speed;
+        
+        handelInput();
         
         if (translate)
             gameTime++;
-
+       
         teapot.transform.rotation.z = (gameTime) * M_PI/180;
 
         if (filPolys)
@@ -266,3 +195,84 @@ int main()
 
     return 0;
 }
+
+void handelInput()
+{
+    SDL_Event event;
+    
+    while(SDL_PollEvent(&event))
+    {
+        if (event.type == SDL_QUIT)
+        {
+            running = false;
+            continue;
+        }
+        else if (event.type == SDL_KEYUP)
+        {
+            if (event.key.keysym.sym < 256)
+                keys[event.key.keysym.sym] = false;
+            
+            if (event.key.keysym.sym == SDLK_p)
+                drawPoints = !drawPoints;
+            if (event.key.keysym.sym == SDLK_o)
+                filPolys = !filPolys;
+            if (event.key.keysym.sym == SDLK_t)
+                translate = !translate;
+            if (event.key.keysym.sym == SDLK_i)
+                curResolution++;
+            if (event.key.keysym.sym == SDLK_k)
+                curResolution--;
+            if (event.key.keysym.sym == SDLK_u)
+                curPatch++;
+            if (event.key.keysym.sym == SDLK_j)
+                curPatch--;
+            if (event.key.keysym.sym == SDLK_y)
+                drawSingle = !drawSingle;
+            if (event.key.keysym.sym == SDLK_z)
+                lockedMouse = !lockedMouse;
+        }
+        else if (event.type == SDL_KEYDOWN)
+        {
+            if (event.key.keysym.sym < 256)
+                keys[event.key.keysym.sym] = true;
+        }
+        else if (event.type == SDL_MOUSEMOTION)
+        {
+            if (lockedMouse)
+            {
+                float dx = (float)(WIDTH / 2  - event.motion.x) / WIDTH;
+                float dy = (float)(HEIGHT / 2 - event.motion.y) /  HEIGHT;
+                
+                camera.rotation = camera.rotation * Quaternion::initRotation(Vector3(0, 1, 0), -dx).normalized();
+                camera.rotation = camera.rotation * Quaternion::initRotation(camera.rotation.getLeft(), dy).normalized();
+                
+                SDL_WarpMouseInWindow(mainWindow, WIDTH / 2, HEIGHT / 2);
+            }
+        }
+    }
+    
+    if (keys[SDLK_w])
+        camera.translation = camera.translation - camera.rotation.getForward() * speed;
+    if (keys[SDLK_s])
+        camera.translation = camera.translation - camera.rotation.getBack() * speed;
+    if (keys[SDLK_a])
+        camera.translation = camera.translation + camera.rotation.getLeft() * speed;
+    if (keys[SDLK_d])
+        camera.translation = camera.translation + camera.rotation.getRight() * speed;
+    if (keys[SDLK_q])
+        camera.translation = camera.translation - camera.rotation.getUp() * speed;
+    if (keys[SDLK_e])
+        camera.translation = camera.translation - camera.rotation.getDown() * speed;
+}
+
+void checkSDLError()
+{
+    std::string error = SDL_GetError();
+    if (error != "")
+    {
+        std::cout << "Error (SDL): " << error << std::endl;
+        SDL_ClearError();
+    }
+}
+
+
