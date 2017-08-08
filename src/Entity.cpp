@@ -24,9 +24,15 @@ void Entity::render(TessellationShader shader, int resolution, Camera camera)
 
     shader.updateResolution(resolution);
     shader.updateNumPatches(surfaceBall.numPatches);
-
+        
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, surfaceBall.vertices);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, surfaceBall.indices);
     glDrawElements(GL_PATCHES, surfaceBall.numPatches * 16, GL_UNSIGNED_INT, NULL);
+    
+    glDisableVertexAttribArray(0);
 }
 
 void Entity::renderPoints(Shader shader, Camera camera)
@@ -39,6 +45,12 @@ void Entity::renderPoints(Shader shader, Camera camera)
     shader.updateTransformMatrix(transformMatrix);
     shader.updateProjectionMatrix(projectionMatrix);
     
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, surfaceBall.vertices);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, surfaceBall.indices);
     glDrawElements(GL_POINTS, surfaceBall.numPatches * 16, GL_UNSIGNED_INT, NULL);
+    
+    glDisableVertexAttribArray(0);
 }
