@@ -1,6 +1,7 @@
 #ifndef SURFACE_H
 #define SURFACE_H
 
+#include <iostream>
 #include <string>
 #include <fstream>
 #include <vector>

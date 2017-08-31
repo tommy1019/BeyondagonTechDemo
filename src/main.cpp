@@ -26,7 +26,7 @@
 #define WIDTH 800
 #define HEIGHT 600
 
-#define WINDOW_TITLE "Beyondagon Tech Demo"
+#define WINDOW_TITLE "Tech Demo"
 
 void handelInput();
 void checkSDLError();
@@ -107,7 +107,7 @@ int main()
     Entity teapot("res/teapot.sball", true);
     Texture texture("res/texture/test.png");
     
-    Surface teapotOld("teapot.csuf.obj");
+    Surface teapotOld("teapot.obj");
     
     teapot.transform.rotation.x = (-90) * M_PI/180;
     
@@ -115,9 +115,9 @@ int main()
     
     srand(time(NULL));
     
-    for (int i = 0; i < 10; i++)
-        for (int j = 0; j < 10; j++)
-            for (int k = 0; k < 10; k++)
+    for (int i = 0; i < 5; i++)
+        for (int j = 0; j < 5; j++)
+            for (int k = 0; k < 5; k++)
             {
                 Entity e = Entity(teapot.surfaceBall);
                 
@@ -128,7 +128,7 @@ int main()
                 
                 e.transform = t;
                 
-                //                entities.push_back(e);
+                //entities.push_back(e);
             }
     
     glEnable(GL_DEPTH_TEST);

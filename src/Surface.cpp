@@ -101,36 +101,36 @@ Surface::Surface(std::string fileName)
             a.y = verticeTemp[(pA - 1) * 3 + 1];
             a.z = verticeTemp[(pA - 1) * 3 + 2];
             
-            a.nx = verticeTemp[(nA - 1) * 3];
-            a.ny = verticeTemp[(nA - 1) * 3 + 1];
-            a.nz = verticeTemp[(nA - 1) * 3 + 2];
+            a.nx = normalTemp[(nA - 1) * 3];
+            a.ny = normalTemp[(nA - 1) * 3 + 1];
+            a.nz = normalTemp[(nA - 1) * 3 + 2];
             
-            a.tx = verticeTemp[(tA - 1) * 2];
-            a.ty = verticeTemp[(tA - 1) * 2 + 1];
+            a.tx = textureTemp[(tA - 1) * 2];
+            a.ty = textureTemp[(tA - 1) * 2 + 1];
             
             Vertex b;
             b.x = verticeTemp[(pB - 1) * 3];
             b.y = verticeTemp[(pB - 1) * 3 + 1];
             b.z = verticeTemp[(pB - 1) * 3 + 2];
             
-            b.nx = verticeTemp[(nB - 1) * 3];
-            b.ny = verticeTemp[(nB - 1) * 3 + 1];
-            b.nz = verticeTemp[(nB - 1) * 3 + 2];
+            b.nx = normalTemp[(nB - 1) * 3];
+            b.ny = normalTemp[(nB - 1) * 3 + 1];
+            b.nz = normalTemp[(nB - 1) * 3 + 2];
             
-            b.tx = verticeTemp[(tB - 1) * 2];
-            b.ty = verticeTemp[(tB - 1) * 2 + 1];
+            b.tx = textureTemp[(tB - 1) * 2];
+            b.ty = textureTemp[(tB - 1) * 2 + 1];
             
             Vertex c;
             c.x = verticeTemp[(pC - 1) * 3];
             c.y = verticeTemp[(pC - 1) * 3 + 1];
             c.z = verticeTemp[(pC - 1) * 3 + 2];
             
-            c.nx = verticeTemp[(nC - 1) * 3];
-            c.ny = verticeTemp[(nC - 1) * 3 + 1];
-            c.nz = verticeTemp[(nC - 1) * 3 + 2];
+            c.nx = normalTemp[(nC - 1) * 3];
+            c.ny = normalTemp[(nC - 1) * 3 + 1];
+            c.nz = normalTemp[(nC - 1) * 3 + 2];
             
-            c.tx = verticeTemp[(tC - 1) * 2];
-            c.ty = verticeTemp[(tC - 1) * 2 + 1];
+            c.tx = textureTemp[(tC - 1) * 2];
+            c.ty = textureTemp[(tC - 1) * 2 + 1];
             
             if (vertexMap.find(a) == vertexMap.end())
             {
@@ -169,7 +169,9 @@ Surface::Surface(std::string fileName)
     }
     
     numIndicies = indicies.size();
-    
+
+    std::cout << "Loaded normal model with " << numIndicies << " indicies, " << (verticeTemp.size() / 3) << " verticies, " << (normalTemp.size() / 3)  << " normals, " << (textureTemp.size() / 2) << " texture coords" << std::endl;
+
     for(uint i = 0; i < vertexes.size(); i++)
     {
         Vertex v = vertexes[i];
